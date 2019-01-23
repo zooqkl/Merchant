@@ -1,0 +1,11 @@
+app:
+  releaseMode: true
+  HTTPPort: 8080
+  Dbname: merchant
+  Dbuser: postgres
+  Dbpasswd: yunphant
+  Dbtype: postgres
+  Dbip: 127.0.0.1
+  Dbport: 5432
+  Dbcharset: utf8
+  SignKey: merchant

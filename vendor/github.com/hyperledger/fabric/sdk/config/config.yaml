@@ -1,0 +1,76 @@
+client:
+  tls:
+    # server是否要验证client证书
+    clientAuthRequired: false
+    tlsPath: ${GOPATH}/src/github.com/hyperledger/fabric/examples/e2e_cli/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls
+  mspconfig:
+    id: Org1MSP
+    # [notice] some operation can only be executed by Admin user
+    userpath: ${GOPATH}/src/github.com/hyperledger/fabric/examples/e2e_cli/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+    BCCSP:
+      Provider: SW
+      Hash: SHA2
+      Security: 256
+      # Location of Key Store
+      FileKeyStore:
+        KeyStore:
+    fake:
+      peer0.org2.example.com:
+        id: Org2MSP
+        path: ${GOPATH}/src/github.com/hyperledger/fabric/examples/e2e_cli/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
+      peer0.org3.example.com:
+        id: Org3MSP
+        path: ${GOPATH}/src/github.com/hyperledger/fabric/examples/e2e_cli/crypto-config/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp
+  # should be "CRITICAL","ERROR","WARNING","NOTICE","INFO","DEBUG"
+  logLevel:
+    sdk: DEBUG
+    fabric: INFO
+
+
+orderers:
+  orderer0.example.com:
+    grpcConfig:
+      address: grpcs://127.0.0.1:8050
+      serverNameOverride: orderer0.example.com
+      tlsCaCertPath: ${GOPATH}/src/github.com/hyperledger/fabric/examples/e2e_cli/crypto-config/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
+
+  orderer1.example.com:
+    grpcConfig:
+      address: grpcs://127.0.0.1:9050
+      serverNameOverride: orderer1.example.com
+      tlsCaCertPath: ${GOPATH}/src/github.com/hyperledger/fabric/examples/e2e_cli/crypto-config/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
+
+  orderer2.example.com:
+    grpcConfig:
+      address: grpcs://127.0.0.1:10050
+      serverNameOverride: orderer2.example.com
+      tlsCaCertPath: ${GOPATH}/src/github.com/hyperledger/fabric/examples/e2e_cli/crypto-config/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem
+
+
+peers:
+  peer0.org1.example.com:
+    grpcConfig:
+      # this Address is used to send endorsement and query requests
+      address: grpcs://127.0.0.1:7051
+      serverNameOverride: peer0.org1.example.com
+      tlsCaCertPath: ${GOPATH}/src/github.com/hyperledger/fabric/examples/e2e_cli/crypto-config/peerOrganizations/org1.example.com/tlsca/tlsca.org1.example.com-cert.pem
+    # eventUrl is only needed when using eventhub (default is delivery service)
+    eventAddress: grpcs://127.0.0.1:7053
+
+
+timeout:
+  event:
+    # 同步Invoke事件返回等待时间
+    txResponse: 10s
+    # 注册事件超时时间
+    registrationResponse: 5s
+
+
+event:
+  # which peer to get event message
+  source: peer0.org1.example.com
+  retrace:
+    # how long to sync the latest blockInfo
+    syncInterval: 30s
+    # max count of missing block to retrace at start,in case of too many blocks generated when the client is off line
+    maxCountToRetraceAtStart: 30
